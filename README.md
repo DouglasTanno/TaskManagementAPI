@@ -42,7 +42,7 @@ Executar o projeto TaskManagementAPI. Ao ser executado, será carregado automati
 
 ## Auth
 
-O AuthController gerencia a autenticação e o cadastro de usuários. Todas as operações necessitam que o usuário esteja autenticado.
+O AuthController gerencia a autenticação e o cadastro de usuários, considerados como `User`. Todas as operações necessitam que o usuário esteja autenticado.
 
 Cada usuário possui os atributos `Id` (inteiro identidade), `Username` (nome escolhido pelo usuário), `Password` (senha escolhida pelo usuário) e `IsSuperUser` (flag que determina se o usuário pode ou não cadastrar novos usuários).
 
@@ -50,8 +50,13 @@ Se encontra disponível o usuário "su" (de superuser), que possui a flag `IsSUp
 
 ### POST /Auth/login
 
+Operação de login, utilizada para obter o token de autorização do usuário.
 Deve ser utilizado para logar o usuário na API com as credenciais `Username` e `Password`.
 O sistema apenas possui cadastrado o usuário "su". 
+
+**Condições:**
+
+- O usuário deve estar cadastrado no sistema.
 
 1. Envie uma requisição POST com as credenciais de usuário:
 ```json
@@ -66,11 +71,17 @@ O sistema apenas possui cadastrado o usuário "su".
     "token": "{seu-token-jwt}"
 }
 ```
-3. Em Authorize, inserir o token retornado anteriormente, junto do prefixo "Bearer", no formato **'Bearer {seu-token}'** e pressione Authorize. Com isso, o usuário se encontrará autenticado na API e será permitido realizar as outras operações. Caso contrário, é retornado como _Unauthorized_.
+3. Em Authorize, inserir o token retornado anteriormente, adicionando o prefixo "Bearer", no seguinte formato
+   `Bearer {seu-token-jwt}`.
+    Em seguida,  pressione Authorize. Com isso, o usuário se encontrará autenticado na API e será permitido realizar as outras operações. Caso contrário, é retornado como _Unauthorized_.
 
 ### POST /Auth/register
 
-Ação disponível apenas para usuários autenticados e que possuam a flag `IsSuperUser` como **true**.
+Operação de cadastro de novos usuários.
+
+**Condições:**
+
+ - Disponível apenas para usuários autenticados e que possuam a flag `IsSuperUser` como **true**.
 
 1. Envie uma requisição POST com os parâmetros do novo usuário:
 ```json
@@ -82,31 +93,141 @@ Ação disponível apenas para usuários autenticados e que possuam a flag `IsSu
 ```
 2. Antes de acessar a API com o novo usuário cadastrado, deve ser realizado o logout em Authorize.
 
-### TodosController
+### Todos
 
-O TodosController gerencia as operações relacionadas às tarefas, que são chamadas de `todo` (do inglês, a fazer). Abaixo estão os endpoints e suas condições:
+O TodosController gerencia as operações relacionadas às tarefas, que são chamadas de `Todo` (do inglês, a fazer). 
+O objeto **Todo** possui os atributos `Id` (inteiro identidade), `Title` (título da tarefa), `Description` (descrição da tarefa), `CreatedAt` (data de criação da tarefa no formado **YYYY-MM-DD**) e `UserID` (ID do usuário que criou a tarefa).
 
-**GET /api/todos**
+Abaixo se encontram os endpoints e suas condições:
 
-Retorna a lista de todas as tarefas cadastradas. Também aceita o parâmetro de status como filtro, retornando a lista de todas as tarefas cadastradas com determinado status.
-Os status existentes são: Pendente, Em Andamento e Concluída. 
+**GET /api/Todos**
 
-- Condicionalidades:
+Operação que retorna a lista de todas as tarefas cadastradas, caso não seja inserido nenhum parâmetro. Também aceita o parâmetro de `Status`, retornando a lista de todas as tarefas cadastradas filtradas por determinado status.
+Os status existentes são: **Pendente**, **Em Andamento** e **Concluída**.
 
-  - As tarefas são retornadas apenas para usuários autenticados.
-  - São retornadas as tarefas, independente do usuário.
-  - Só são aceitos os parâmetros de status de filtro no formado "Pendente", "Em Andamento" ou "Concluída".
+**Condições:**
 
-GET /api/todos/{id}
+- Disponível apenas para usuários autenticados.
+- São retornadas as tarefas, independente do usuário.
+- Só são aceitos os parâmetros de status de filtro no formado "Pendente", "Em Andamento" ou "Concluída".
 
-Retorna os detalhes de uma tarefa específica com base no ID.
+**Exemplo de Resposta:**
+```json
+[
+  {
+    "id": 1,
+    "title": "Exemplo de Tarefa 1",
+    "description": "Descrição da primeira tarefa",
+    "createdAt": "2023-12-25",
+    "status": "Em Andamento",
+    "userId": 1
+  },
+  {
+    "id": 2,
+    "title": "Exemplo de Tarefa 2",
+    "description": "Descrição da segunda tarefa",
+    "createdAt": "2024-01-01",
+    "status": "Pendente",
+    "userId": 1
+  },
+  {
+    "id": 3,
+    "title": "Exemplo de Tarefa 3",
+    "description": "Descrição da terceira tarefa",
+    "createdAt": "2024-02-15",
+    "status": "Concluída",
+    "userId": 1
+  }
+]
+```
 
-Condicionalidades:
+**GET /api/Todos/{id}**
 
-Verifica se a tarefa pertence ao usuário autenticado.
+Operação que retorna os detalhes de uma tarefa específica com base em seu `Id`.
 
-Retorna um erro 404 se a tarefa não for encontrada.
+**Condições:**
 
-POST /api/todos
+- Disponível apenas para usuários autenticados.
 
-Cria uma nova tarefa.
+**Exemplo Resposta:**
+```json
+{
+    "id": 1,
+    "title": "Minha nova tarefa",
+    "description": "Descrição da tarefa",
+    "createdAt": "2025-01-01",
+    "status": "Pendente",
+    "userId": 1
+}
+```
+
+**POST /api/Todos**
+
+Operação que realiza o cadastro de uma nova tarefa.
+
+São preenchidos automaticamente os parâmetros `Id` (identidade), `CreatedAt` (data atual) e `UserId` (ID do usuário autenticado).
+
+**Condições:**
+
+- Disponível apenas para usuários autenticados.
+
+**Corpo da requisição:**
+```json
+{
+    "title": "Minha nova tarefa",
+    "description": "Descrição da tarefa"
+}
+```
+
+**Exemplo Resposta:**
+```json
+{
+    "id": 1,
+    "title": "Minha nova tarefa",
+    "description": "Descrição da tarefa",
+    "createdAt": "2025-01-01",
+    "status": "Pendente",
+    "userId": 1
+}
+```
+
+**PUT /api/Todos/{id}**
+
+Operação que atualiza uma tarefa já existente através de seu `Id`.
+
+**Condições:**
+
+- Disponível apenas para usuários autenticados.
+- Apenas é permitida a atualização de tarefas criadas pelo usuário autenticado.
+- É possível atualizar os atributos `Title`, `Description` e/ou `Status`. Caso algum deles não seja preenchido na requisição, apenas serão atualizados os que forem preenchidos. Os outros atributos se mantém imutáveis.
+
+**Corpo da requisição:**
+```json
+{
+    "title": "Minha tarefa atualizada",
+    "description": "Descrição da tarefa atualizada",
+    "status": "Concluída"
+}
+```
+
+**Exemplo Resposta:**
+```json
+{
+    "id": 1,
+    "title": "Minha tarefa atualizada",
+    "description": "Descrição da tarefa atualizada",
+    "createdAt": "2025-01-01",
+    "status": "Concluída",
+    "userId": 1
+}
+```
+
+**DELETE /api/Todos/{id}**
+
+Exclui uma tarefa já existente através de seu `Id`. 
+
+**Condições:**
+
+- Disponível apenas para usuários autenticados.
+- Apenas é permitida a exclusão de tarefas criadas pelo usuário autenticado.
+  
