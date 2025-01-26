@@ -36,9 +36,7 @@ Já existem _seeds_ de registros de 3 tarefas e de um usuário superuser, que de
 
 ## Instruções para Execução
 
-Executar o projeto TaskManagementAPI. Ao ser executado, será carregado automaticamente o Swagger com os endpoints em http://localhost:5233/swagger/ .
-
-## Endpoints e Operações
+Compilar e executar o projeto TaskManagementAPI no Visual Studio. Ao ser executado, será carregada automaticamente a página do Swagger com os endpoints em http://localhost:5233/swagger/ .
 
 ## Auth
 
@@ -100,7 +98,7 @@ O objeto **Todo** possui os atributos `Id` (inteiro identidade), `Title` (títul
 
 Abaixo se encontram os endpoints e suas condições:
 
-**GET /api/Todos**
+### GET /api/Todos
 
 Operação que retorna a lista de todas as tarefas cadastradas, caso não seja inserido nenhum parâmetro. Também aceita o parâmetro de `Status`, retornando a lista de todas as tarefas cadastradas filtradas por determinado status.
 Os status existentes são: **Pendente**, **Em Andamento** e **Concluída**.
@@ -141,7 +139,7 @@ Os status existentes são: **Pendente**, **Em Andamento** e **Concluída**.
 ]
 ```
 
-**GET /api/Todos/{id}**
+### GET /api/Todos/{id}
 
 Operação que retorna os detalhes de uma tarefa específica com base em seu `Id`.
 
@@ -161,7 +159,7 @@ Operação que retorna os detalhes de uma tarefa específica com base em seu `Id
 }
 ```
 
-**POST /api/Todos**
+### POST /api/Todos
 
 Operação que realiza o cadastro de uma nova tarefa.
 
@@ -191,7 +189,7 @@ São preenchidos automaticamente os parâmetros `Id` (identidade), `CreatedAt` (
 }
 ```
 
-**PUT /api/Todos/{id}**
+### PUT /api/Todos/{id}
 
 Operação que atualiza uma tarefa já existente através de seu `Id`.
 
@@ -222,7 +220,7 @@ Operação que atualiza uma tarefa já existente através de seu `Id`.
 }
 ```
 
-**DELETE /api/Todos/{id}**
+### DELETE /api/Todos/{id}
 
 Exclui uma tarefa já existente através de seu `Id`. 
 
@@ -230,4 +228,22 @@ Exclui uma tarefa já existente através de seu `Id`.
 
 - Disponível apenas para usuários autenticados.
 - Apenas é permitida a exclusão de tarefas criadas pelo usuário autenticado.
-  
+
+## Testes Unitários
+
+Os testes estão localizados no projeto `TaskManagementAPITests`.
+
+Estão incluídas validações unitárias e testes de integração para os serviços e endopoints da API, já englobando as regras de negócio e validações dos objetos existente.
+
+Os testes podem ser executados pressionando o botão direito em cima do projeto, em "Executar Testes".
+
+## Considerações Finais
+
+Este projeto oferece uma solução simples e escalável para gerenciar tarefas, com foco em boas práticas RESTful e separação de responsabilidades. Use os testes para validar funcionalidades e explore os endpoints pelo Swagger.
+Essa API foi projetada para ser simples de usar e pode ser expandida com novas funcionalidades conforme necessário. 
+Para qualquer dúvida, entre em contato:
+
+**Contato:**
+
+- Nome: Douglas Rorie Tanno
+- Email: douglas.tanno@gmail.com
