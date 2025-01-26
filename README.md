@@ -31,7 +31,7 @@ O projeto está organizado nos seguintes pacotes:
 
 ## Banco de Dados
 
-O banco de dados da API é gerenciado por uma Entity Framework Core In-Memory, onde os dados estão disponíveis apenas em tempo de execução. 
+O banco de dados da API é gerenciado com o Entity Framework Core In-Memory, onde os dados estão disponíveis apenas em tempo de execução. 
 Já existem _seeds_ de registros de 3 tarefas e de um usuário superuser, que deve ser utilizado para cadastrar novos usuários.
 
 ## Instruções para Execução
